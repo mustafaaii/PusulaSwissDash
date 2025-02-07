@@ -15,8 +15,8 @@ function Index() {
 
     const [ShortTitle, setShortTitle] = useState<string>("")
     const [Title, setTitle] = useState<string>("")
-    const [ShortText, setShortText] = useState<string>("")
     const [Text, setText] = useState<string>("")
+    const [Content, setContent] = useState<string>("")
 
     const [SeoTitle, setSeoTitle] = useState<string>("")
     const [SeoText, setSeoText] = useState<string>("")
@@ -67,13 +67,13 @@ function Index() {
                                 <div className="col-12 mb-2">
                                     <div className="form-group">
                                         <label className="form-label mb-1 fs-7">Kısa Açıklaması</label>
-                                        <textarea className="form-control" placeholder="Kısa Açıklama" rows={5} value={ShortText} onChange={(e: any) => { setShortText(e.target.value) }}></textarea>
+                                        <textarea className="form-control" placeholder="Kısa Açıklama" rows={5} value={Text} onChange={(e: any) => { setText(e.target.value) }}></textarea>
                                     </div>
                                 </div>
                                 <div className="col-12 mb-2">
                                     <div className="form-group">
                                         <label className="form-label mb-1 fs-7">Haber İçeriği</label>
-                                        <Flex.Editor style={{ height: "800" }} value={Text} onChange={(e: any) => { setText(e) }} />
+                                        <Flex.Editor style={{ height: "800" }} value={Content} onChange={(e: any) => { setContent(e) }} />
                                     </div>
                                 </div>
                             </div>
@@ -286,7 +286,7 @@ function Index() {
                                         <div className="d-flex flex-column">
                                             <h4 className="mb-1 text-dark">Öne Çıkarma Hakkında</h4>
                                             <span className="mb-2">
-                                                Haberinizi belirli bir kategoride ilk sırada görünmesini sağlayabilrisiniz.İsterseniz haberinize öne çıkan görsel belirleyebilirsiniz.
+                                                Haberinizi belirli bir kategoride ilk sırada görünmesini sağlayabilrisiniz.İsterseniz haberinize öne çıkan görsel belirleyebilir, belirli bir tarihe kadar öne çıkarabilirsiniz.
                                             </span>
                                         </div>
                                     </div>
@@ -304,7 +304,7 @@ function Index() {
                                 <div className="col-12 mb-5" hidden={FeaturedPost ? false : true}>
                                     <Flex.Upload.Single
                                         value={Image}
-                                        placeholder="Haber Görseli Seçin"
+                                        placeholder="Haber Görseli Seçin (Opsiyonel)"
                                         onChange={(e: any) => { setImage(e) }}
                                         permissions={{
                                             maxWidth: 1024,
@@ -315,10 +315,33 @@ function Index() {
                                 </div>
 
                                 <div className="col-12 mb-5" hidden={FeaturedPost ? false : true}>
-                                    <label className="form-label mb-1 fs-6 text-gray-600 fw-semibold">Berlirli bir tarihe kadar öne çıkart</label>
-                                    <div className="d-flex">
-                                        <div className="w-100 me-1">
-                                            <input className="form-control" placeholder="05.02.2024" value={FeaturedDate} onChange={(e: any) => { setFeaturedDate(e.target.checked) }} />
+                                    <div className="row">
+                                        <div className="col-12">
+                                            <label className="fs-8 fw-bold mb-1 text-gray-700">Tarih:<span className="text-gray-400 ms-3">(Opsiyonel)</span></label>
+                                            <Flex.Picker.Date />
+                                        </div>
+                                        <div className="col-12">
+                                            <div className="d-flex">
+                                                <div className="w-100">
+                                                    <Flex.Select.Single
+                                                        data={Array.from({ length: 24 }, (_, i) => ({ id: `${i < 10 ? 0 : ""}${i + 1}`, value: `${i < 10 ? 0 : ""}${i + 1}` }))}
+                                                        column={["id", "value"]}
+                                                        placeholder="Saat"
+                                                        settings={{ search: false }}
+                                                    />
+                                                </div>
+                                                <div className="ms-2 me-2 d-flex align-items-center justify-content-center">
+                                                    <i className="fa-regular fa-clock fs-4"></i>
+                                                </div>
+                                                <div className="w-100">
+                                                    <Flex.Select.Single
+                                                        data={Array.from({ length: 60 }, (_, i) => ({ id: `${i < 10 ? 0 : ""}${i + 1}`, value: `${i < 10 ? 0 : ""}${i + 1}` }))}
+                                                        column={["id", "value"]}
+                                                        placeholder="Dakika"
+                                                        settings={{ search: false }}
+                                                    />
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -349,11 +372,33 @@ function Index() {
                                     </div>
                                 </div>
                             </div>
-                            <div className="col-12 mb-5">
-                                <Flex.Planner
-
-                                />
-
+                            <div className="col-12 mb-2">
+                                <label className="fs-8 fw-bold mb-1 text-gray-700">Tarih:</label>
+                                <Flex.Picker.Date />
+                            </div>
+                            <div className="col-12">
+                                <label className="fs-8 fw-bold mb-1 text-gray-700">Saat:</label>
+                                <div className="d-flex">
+                                    <div className="w-100">
+                                        <Flex.Select.Single
+                                            data={Array.from({ length: 24 }, (_, i) => ({ id: `${i < 10 ? 0 : ""}${i + 1}`, value: `${i < 10 ? 0 : ""}${i + 1}` }))}
+                                            column={["id", "value"]}
+                                            placeholder="Saat"
+                                            settings={{ search: false }}
+                                        />
+                                    </div>
+                                    <div className="w-100px d-flex align-items-center justify-content-center">
+                                        <i className="fa-regular fa-clock fs-1"></i>
+                                    </div>
+                                    <div className="w-100">
+                                        <Flex.Select.Single
+                                            data={Array.from({ length: 60 }, (_, i) => ({ id: `${i < 10 ? 0 : ""}${i + 1}`, value: `${i < 10 ? 0 : ""}${i + 1}` }))}
+                                            column={["id", "value"]}
+                                            placeholder="Dakika"
+                                            settings={{ search: false }}
+                                        />
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

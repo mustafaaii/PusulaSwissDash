@@ -741,13 +741,173 @@ interface DatePicker {
 }
 const DatePicker = () => {
 
+    const today = new Date();
+    const [currentMonth, setCurrentMonth] = useState(today.getMonth());
+    const [currentYear, setCurrentYear] = useState(today.getFullYear());
 
+    const days = ["Pts", "Sal", "Çar", "Per", "Cm", "Cts", "Paz"];
+    const months = ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"];
+
+    const handleTodayClick = () => {
+        const today = new Date();
+        setCurrentMonth(today.getMonth());
+        setCurrentYear(today.getFullYear());
+    };
+
+    const next = () => {
+        setCurrentYear(currentMonth === 11 ? currentYear + 1 : currentYear);
+        setCurrentMonth((currentMonth + 1) % 12);
+    };
+
+    const previous = () => {
+        setCurrentYear(currentMonth === 0 ? currentYear - 1 : currentYear);
+        setCurrentMonth(currentMonth === 0 ? 11 : currentMonth - 1);
+    };
+
+    const daysInMonth = (iMonth: any, iYear: any) => {
+        return 32 - new Date(iYear, iMonth, 32).getDate();
+    };
+
+    const showCalendar = (month: any, year: any) => {
+        const first = (new Date(year, month, 1).getDay() + 6) % 7; // Pazartesi'nin 0 olduğu gün hesaplaması
+        const current = daysInMonth(month, year);
+
+        const calendarBody = Array.from({ length: 6 }, (_, rowIndex) => {
+            const row = Array.from({ length: 7 }, (_, index) => {
+                const dayIndex = rowIndex * 7 + index;
+                const date = dayIndex - first + 1;
+
+                const selectedDate = new Date(year, month, date);
+                const isBeforeToday = selectedDate < today;
+
+                if (rowIndex === 0 && index < first) {
+                    const prevMonthDate = daysInMonth(month === 0 ? 11 : month - 1, month === 0 ? year - 1 : year) - first + index + 1;
+                    return (
+                        <td key={`previus-${index}`}>
+                            <div
+                                onClick={() => { }}
+                                style={{
+                                    width: "14,28571428571429%",
+                                    opacity: 0.5,
+                                    cursor: "not-allowed",
+                                }}
+                                className="d-flex align-items-center justify-content-center fs-14 cursor-pointer h-40px border border-gray-400 rounded-3 fs-8 fw-bold"
+                            >
+                                {prevMonthDate}
+                            </div>
+                        </td>
+                    );
+                } else if (date > current) {
+                    return (
+                        <td key={`next-${index}`}>
+                            <div
+                                onClick={() => { !isBeforeToday && alert(date - current) }}
+                                style={{ width: "14,28571428571429%" }}
+                                className="d-flex align-items-center justify-content-center fs-14 cursor-pointer rounded-3 h-40px border border-gray-400 fs-8 fw-bold"
+                            >
+                                {date - current}
+                            </div>
+                        </td>
+                    );
+                } else {
+                    return (
+                        <td key={`current-${index}`}>
+                            <div
+                                onClick={() => { !isBeforeToday && alert(date) }}
+                                style={{
+                                    width: "14,28571428571429%",
+                                    opacity: isBeforeToday ? 0.5 : 1, // Bugünden önceki günler için opaklık
+                                    cursor: isBeforeToday ? "not-allowed" : "pointer", // Seçilemez günler için cursor
+                                }}
+                                className={`d-flex align-items-center justify-content-center fs-14 rounded-3 h-40px border border-gray-400 fs-8 fw-bold`}
+                            >
+                                {date}
+                            </div>
+                        </td>
+                    );
+                }
+            });
+            return <tr key={rowIndex}>{row}</tr>;
+        });
+
+        return calendarBody;
+    };
+
+    const [Show, setShow] = useState(false);
     return (
         <>
-
+            <div className="position-relative">
+                <div className="mb-2">
+                    <input
+                        className="form-control cursor-pointer"
+                        readOnly
+                        onClick={() => { setShow((old) => { return (old ? false : true) }) }}
+                        placeholder="gg.aa.yyyy"
+                    />
+                </div>
+                <i className="fa-regular fa-calendar-days position-absolute fs-2" style={{ position: "absolute", top: 13, right: 13 }}></i>
+                <div className="pt-0 position-absolute bg-white border border-gray-300 rounded-2 w-100" style={{ visibility: Show ? "visible" : "hidden", zIndex: 110 }}>
+                    <div className="p-3 pt-2 pb-1">
+                        <div className="row p-2">
+                            <div className="col-lg-12 p-0 mb-2">
+                                <div className="d-flex">
+                                    <div className="w-25px me-1">
+                                        <div className="btn-sm d-flex align-items-center justify-content-center cursor-pointer w-25px h-30px border border-info  rounded-3" onClick={previous}>
+                                            <i className="fa-solid fa-chevron-left text-info"></i>
+                                        </div>
+                                    </div>
+                                    <div className="w-100 d-flex justify-content-center me-1">
+                                        <div className="btn-sm d-flex align-items-center justify-content-center cursor-pointer w-100 border border-info rounded-3" onClick={handleTodayClick}>
+                                            <div className="text-info fw-bold">{currentYear}</div>
+                                        </div>
+                                    </div>
+                                    <div className="w-100 d-flex justify-content-center me-1">
+                                        <div className=" btn-sm d-flex align-items-center justify-content-center cursor-pointer w-100 border border-info rounded-3" onClick={handleTodayClick}>
+                                            <div className="text-info fw-bold">Bu Gün</div>
+                                        </div>
+                                    </div>
+                                    <div className="w-100 d-flex justify-content-center me-1">
+                                        <div className="btn-sm d-flex align-items-center justify-content-center cursor-pointer w-100 border border-info rounded-3" onClick={handleTodayClick}>
+                                            <div className="text-info fw-bold">{months[currentMonth]}</div>
+                                        </div>
+                                    </div>
+                                    <div className="w-25px d-flex justify-content-end">
+                                        <div className="btn-sm d-flex align-items-center justify-content-center cursor-pointer w-25px h-30px border border-info rounded-3 rounded-3" onClick={next}>
+                                            <i className="fa-solid fa-chevron-right text-info"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-lg-12 p-0">
+                                <table className="w-100">
+                                    <thead>
+                                        <tr>
+                                            {days.map((day, index) => (
+                                                <th key={index}>
+                                                    <div
+                                                        style={{ width: "14,28571428571429%" }}
+                                                        className="h-40px border border-gray-400 d-flex align-items-center justify-content-center rounded-3 fs-8 bg-gray-300"
+                                                    >
+                                                        {day}
+                                                    </div>
+                                                </th>
+                                            ))}
+                                        </tr>
+                                    </thead>
+                                    <tbody className="mt-2">
+                                        {showCalendar(currentMonth, currentYear)}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className="drawer-overlay bg-transparent" onClick={() => { setShow((prevState) => !prevState); }} style={{ zIndex: 109, display: Show === true ? "block" : "none" }}></div>
         </>
-    )
+    );
 }
+
 
 
 
@@ -1032,36 +1192,134 @@ interface Eventer {
 
 }
 const Eventer = () => {
-
+    const ConcertArea = [
+        { "id": 1, "name": "Opernhaus Zürich" },
+        { "id": 2, "name": "Victoria Hall" },
+        { "id": 3, "name": "Tonhalle Zürich" },
+        { "id": 4, "name": "Grand Théâtre de Genève" },
+        { "id": 5, "name": "Kongresshaus Zürich" },
+        { "id": 6, "name": "Stadtcasino Basel" },
+        { "id": 7, "name": "Salle Métropole" },
+        { "id": 8, "name": "Lugano Arte e Cultura (LAC)" },
+        { "id": 9, "name": "Palais de Beaulieu" },
+        { "id": 10, "name": "Kultur- und Kongresszentrum Luzern" },
+        { "id": 11, "name": "Kultur- und Kongresszentrum Thun" },
+        { "id": 12, "name": "Tonhalle St. Gallen" },
+        { "id": 13, "name": "Kongresshaus Biel" },
+        { "id": 14, "name": "Konzertsaal Solothurn" },
+        { "id": 15, "name": "Auditorio Stelio Molo" }
+    ]
     return (
         <>
             <div className="row mt-4">
 
                 <div className="col-12">
                     <div className="row">
-                        <div className="col-6 mb-5">
-                            <input className="form-control" placeholder="gg-aa-yyyy" />
+
+                        <div className="col-6 mb-2">
+                            <label className="fs-8 fw-bold mb-1 text-gray-700">Sanatçı:</label>
+                            <input className="form-control" placeholder="Tarkan, Doğuş veya Cem Andrian" />
                         </div>
-                        <div className="col-3 mb-5">
-                            <input className="form-control" placeholder="Saat" />
+                        <div className="col-12 mb-2"></div>
+                        <div className="col-6 mb-2">
+                            <label className="fs-8 fw-bold mb-1 text-gray-700">Organizatör:</label>
+                            <input className="form-control" placeholder="Etkinliği Organize Eden Firma Adı" />
                         </div>
-                        <div className="col-3 mb-5">
-                            <input className="form-control" placeholder="Dakika" />
+                        <div className="col-6 mb-2">
+                            <label className="fs-8 fw-bold mb-1 text-gray-700">Web Sitesi:</label>
+                            <input className="form-control" placeholder="Web Sitesi" />
                         </div>
-                        <div className="col-12 mb-5">
-                            <input className="form-control" placeholder="Adres" />
+                        <div className="col-12 mb-2">
+                            <label className="fs-8 fw-bold mb-1 text-gray-700">Bilet Satış Linki:</label>
+                            <input className="form-control" placeholder="Bilet Satış Linki örn:https://www.eventim-light.com/ch/a/65e1e63d7fe17c...." />
                         </div>
-                        <div className="col-12 mb-5">
-                            <input className="form-control" placeholder="Adres" />
+
+                        <div className="col-12 mb-2">
+                            <label className="fs-8 fw-bold mb-1 text-gray-700">Konser Hakkında:</label>
+                            <Editor />
                         </div>
-                        <div className="col-12 mb-5">
-                            <input className="form-control" placeholder="Adres" />
+
+                        <div className="col-4 mb-2">
+                            <label className="fs-8 fw-bold mb-1 text-gray-700">Konser Tarihi:</label>
+                            <Flex.Picker.Date />
+                        </div>
+
+                        <div className="col-8 mb-2">
+                            <div className="row">
+                                <div className="col-6">
+                                    <label className="fs-8 fw-bold mb-1 text-gray-700">Açılış:</label>
+                                    <div className="d-flex">
+                                        <div className="w-100">
+                                            <Flex.Select.Single
+                                                data={Array.from({ length: 24 }, (_, i) => ({ id: `${i < 10 ? 0 : ""}${i + 1}`, value: `${i < 10 ? 0 : ""}${i + 1}` }))}
+                                                column={["id", "value"]}
+                                                placeholder="Saat"
+                                                settings={{ search: false }}
+                                            />
+                                        </div>
+                                        <div className="me-2 ms-2 d-flex align-items-center justify-content-center">
+                                            <i className="fa-regular fa-clock fs-4"></i>
+                                        </div>
+                                        <div className="w-100">
+                                            <Flex.Select.Single
+                                                data={Array.from({ length: 60 }, (_, i) => ({ id: `${i < 10 ? 0 : ""}${i + 1}`, value: `${i < 10 ? 0 : ""}${i + 1}` }))}
+                                                column={["id", "value"]}
+                                                placeholder="Dakika"
+                                                settings={{ search: false }}
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="col-6">
+                                    <label className="fs-8 fw-bold mb-1 text-gray-700">Başlangıç:</label>
+                                    <div className="d-flex">
+
+                                        <div className="w-100">
+                                            <Flex.Select.Single
+                                                data={Array.from({ length: 24 }, (_, i) => ({ id: `${i < 10 ? 0 : ""}${i + 1}`, value: `${i < 10 ? 0 : ""}${i + 1}` }))}
+                                                column={["id", "value"]}
+                                                placeholder="Saat"
+                                                settings={{ search: false }}
+                                            />
+                                        </div>
+                                        <div className="me-2 ms-2 d-flex align-items-center justify-content-center">
+                                            <i className="fa-regular fa-clock fs-1"></i>
+                                        </div>
+                                        <div className="w-100">
+                                            <Flex.Select.Single
+                                                data={Array.from({ length: 60 }, (_, i) => ({ id: `${i < 10 ? 0 : ""}${i + 1}`, value: `${i < 10 ? 0 : ""}${i + 1}` }))}
+                                                column={["id", "value"]}
+                                                placeholder="Dakika"
+                                                settings={{ search: false }}
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="col-4">
+                            <label className="fs-8 fw-bold mb-1 text-gray-700">Konser Yeri:</label>
+                            <Flex.Select.Single
+                                data={ConcertArea}
+                                column={["id", "name"]}
+                                placeholder="Konser Alanı Seç"
+                                settings={{ search: false }}
+                            />
+                        </div>
+
+                        <div className="col-12 mb-2">
+                            <Mapper />
+                        </div>
+
+                        <div className="col-12">
+                            <label className="fs-8 fw-bold mb-1 text-gray-700">Sponsorlar:</label>
+                            <Flex.Upload.Multiple />
                         </div>
                     </div>
                 </div>
-                <div className="col-12 mb-2">
-                    <Mapper />
-                </div>
+
 
             </div>
 
@@ -1127,170 +1385,7 @@ const Mapper = () => {
  * 
  * 
  */
-interface Planner {
-    value?: string
-    onChange?: any
-    placeholder?: string,
-    permissions?: {
-        maxWidth?: any,
-        maxHeight?: any,
-        situation?: any
-    }
-}
-const Planner = ({ value, onChange, placeholder, permissions = { maxWidth: "", maxHeight: "", situation: "" } }: Planner) => {
 
-
-
-    const today = new Date();
-    const [currentMonth, setCurrentMonth] = useState(today.getMonth());
-    const [currentYear, setCurrentYear] = useState(today.getFullYear());
-
-    const days = ["Paz", "Pts", "Sal", "Çar", "Per", "Cm", "Cts"];
-    const months = ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"];
-
-
-    const handleTodayClick = () => {
-        const today = new Date();
-        setCurrentMonth(today.getMonth());
-        setCurrentYear(today.getFullYear());
-    };
-
-    const next = () => {
-        setCurrentYear(currentMonth === 11 ? currentYear + 1 : currentYear);
-        setCurrentMonth((currentMonth + 1) % 12);
-    };
-
-    const previous = () => {
-        setCurrentYear(currentMonth === 0 ? currentYear - 1 : currentYear);
-        setCurrentMonth(currentMonth === 0 ? 11 : currentMonth - 1);
-    };
-
-    const daysInMonth = (iMonth: any, iYear: any) => {
-        return 32 - new Date(iYear, iMonth, 32).getDate();
-    };
-
-    const showCalendar = (month: any, year: any) => {
-        const first = new Date(year, month, 1).getDay();
-        const current = daysInMonth(month, year);
-
-
-        const calendarBody = Array.from({ length: 6 }, (_, rowIndex) => {
-            const row = Array.from({ length: 7 }, (_, index) => {
-                const dayIndex = rowIndex * 7 + index;
-                const date = dayIndex - first + 1;
-
-                if (rowIndex === 0 && index < first) {
-                    const prevMonthDate = daysInMonth(month === 0 ? 11 : month - 1, month === 0 ? year - 1 : year) - first + index + 1;
-                    return (
-                        <td key={`previus-${index}`}>
-                            <div onClick={() => { }} className="d-flex align-items-center justify-content-center fs-14 cursor-pointer h-40px border border-gray-400 rounded-3 fs-8 fw-bold">
-                                {prevMonthDate}
-                            </div>
-                        </td>
-                    );
-                } else if (date > current) {
-                    return (
-                        <td key={`next-${index}`}>
-                            <div onClick={() => { }} className="d-flex align-items-center justify-content-center fs-14 cursor-pointer  rounded-3 h-40px border border-gray-400 fs-8 fw-bold">
-                                {date - current}
-                            </div>
-                        </td>
-                    );
-                } else {
-                    return (
-                        <td key={`current-${index}`}>
-                            <div onClick={() => { }} className="d-flex align-items-center justify-content-center fs-14 cursor-pointer  rounded-3 h-40px border border-gray-400 fs-8 fw-bold">
-                                {date}
-                            </div>
-                        </td>
-                    );
-                }
-            });
-            return <tr key={rowIndex}>{row}</tr>;
-        });
-
-        return calendarBody;
-    };
-
-
-    return (
-        <>
-            <div className="p-4 pt-0">
-                <div className="row">
-                    <div className="col-lg-12 p-0 mb-2">
-                        <div className="d-flex">
-                            <div className="w-50px me-1">
-                                <div className="btn-sm d-flex align-items-center justify-content-center cursor-pointer w-50px h-30px border border-info  rounded-3" onClick={previous}>
-                                    <i className="fa-solid fa-chevron-left text-info"></i>
-                                </div>
-                            </div>
-                            <div className="w-100 d-flex justify-content-center me-1">
-                                <div className="btn-sm d-flex align-items-center justify-content-center cursor-pointer w-100 border border-info rounded-3" onClick={handleTodayClick}>
-                                    <div className="text-info fw-bold">{currentYear}</div>
-                                </div>
-                            </div>
-                            <div className="w-100 d-flex justify-content-center me-1">
-                                <div className=" btn-sm d-flex align-items-center justify-content-center cursor-pointer w-100 border border-info rounded-3" onClick={handleTodayClick}>
-                                    <div className="text-info fw-bold">Bu Gün</div>
-                                </div>
-                            </div>
-                            <div className="w-100 d-flex justify-content-center me-1">
-                                <div className="btn-sm d-flex align-items-center justify-content-center cursor-pointer w-100 border border-info rounded-3" onClick={handleTodayClick}>
-                                    <div className="text-info fw-bold">{months[currentMonth]}</div>
-                                </div>
-                            </div>
-                            <div className="w-50px d-flex justify-content-end">
-                                <div className="btn-sm d-flex align-items-center justify-content-center cursor-pointer w-50px h-30px border border-info rounded-3 rounded-3" onClick={next}>
-                                    <i className="fa-solid fa-chevron-right text-info"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="col-lg-12 p-0">
-                        <div className="d-flex mb-3">
-
-                            <div className="w-100 me-1">
-                                <Flex.Select.Single
-                                    data={Array.from({ length: 24 }, (_, i) => ({ id: `${i < 10 ? 0 : ""}${i + 1}`, value: `${i < 10 ? 0 : ""}${i + 1}` }))}
-                                    column={["id", "value"]}
-                                    placeholder="Saat"
-                                    settings={{ search: false }}
-                                />
-                            </div>
-                            <div className="w-60px d-flex align-items-center justify-content-center">
-                                <i className="fa-regular fa-clock fs-1"></i>
-                            </div>
-                            <div className="w-100 ms-1">
-                                <Flex.Select.Single
-                                    data={Array.from({ length: 60 }, (_, i) => ({ id: `${i < 10 ? 0 : ""}${i + 1}`, value: `${i < 10 ? 0 : ""}${i + 1}` }))}
-                                    column={["id", "value"]}
-                                    placeholder="Dakika"
-                                    settings={{ search: false }}
-                                />
-                            </div>
-
-                        </div>
-                        <table className="w-100">
-                            <thead>
-                                <tr>
-                                    {days.map((day, index) => (<th key={index}>
-                                        <div className="h-40px border border-gray-400 d-flex align-items-center justify-content-center rounded-3 fs-8 bg-gray-300">
-                                            {day}
-                                        </div>
-                                    </th>
-                                    ))}
-                                </tr>
-                            </thead>
-                            <tbody className="mt-2">
-                                {showCalendar(currentMonth, currentYear)}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </>
-    );
-}
 
 
 
@@ -1305,16 +1400,15 @@ export const Flex = {
     },
     DatePlanner,
     VoicePodcast,
-    picker: {
-        date: DatePicker,
-        color: ColorPicker
+    Picker: {
+        Date: DatePicker,
+        Color: ColorPicker
     },
     Tagger,
     Youtuber,
     Editor,
     Eventer,
-    Mapper,
-    Planner
+    Mapper
 };
 
 
