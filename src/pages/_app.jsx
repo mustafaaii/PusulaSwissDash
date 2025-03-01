@@ -292,7 +292,7 @@ function MyApp({ Component, pageProps }) {
                 <div className="app-wrapper flex-column flex-row-fluid">
 
                     {/* Sidebar */}
-                    <div className="app-sidebar flex-column" >
+                    <div className="app-sidebar flex-column">
                         <div className="app-sidebar-logo px-6" id="kt_app_sidebar_logo">
                             <a href="/">
                                 <img alt="Logo" src="assets/media/logos/default-dark.svg" className="h-25px app-sidebar-logo-default" />
@@ -330,10 +330,10 @@ function MyApp({ Component, pageProps }) {
                                         </div>
 
                                         <div className={`menu-item menu-accordion 
-                                ${toggle === 1 ||
+                                        ${toggle === 1 ||
                                                 pathname === "/news/news.new" ||
                                                 pathname === "/news/news.list" ||
-                                                pathname === "/news/news.category"
+                                                pathname === "/news/news.category.list"
                                                 ? "show" : ""
                                             }`}>
                                             <span className="menu-link" onClick={() => { settoggle((old) => (old === 1 ? null : 1)); }}>
@@ -352,7 +352,7 @@ function MyApp({ Component, pageProps }) {
                                         ${toggle === 1 ||
                                                     pathname === "/news/news.new" ||
                                                     pathname === "/news/news.list" ||
-                                                    pathname === "/news/news.category"
+                                                    pathname === "/news/news.category.list"
                                                     ? "show" : ""
                                                 }`}>
                                                 <div className="menu-item">
@@ -360,7 +360,7 @@ function MyApp({ Component, pageProps }) {
                                                         <span className="menu-bullet">
                                                             <span className="bullet bullet-dot"></span>
                                                         </span>
-                                                        <span className="menu-title">Yeni</span>
+                                                        <span className="menu-title">Yeni Haber</span>
                                                     </Link>
                                                 </div>
                                                 <div className="menu-item">
@@ -368,15 +368,15 @@ function MyApp({ Component, pageProps }) {
                                                         <span className="menu-bullet">
                                                             <span className="bullet bullet-dot"></span>
                                                         </span>
-                                                        <span className="menu-title">Liste</span>
+                                                        <span className="menu-title">Haber Listesi</span>
                                                     </Link>
                                                 </div>
                                                 <div className="menu-item">
-                                                    <Link className={`menu-link ${pathname === "/news/news.category" ? "active" : ""}`} href="/haberler/kategori">
+                                                    <Link className={`menu-link ${pathname === "/news/news.category.list" ? "active" : ""}`} href="/haberler/kategori">
                                                         <span className="menu-bullet">
                                                             <span className="bullet bullet-dot"></span>
                                                         </span>
-                                                        <span className="menu-title">Kategori</span>
+                                                        <span className="menu-title">Kategori Listesi</span>
                                                     </Link>
                                                 </div>
                                             </div>
@@ -476,6 +476,39 @@ function MyApp({ Component, pageProps }) {
                                             </div>
                                         </div>
 
+                                        <div className={`menu-item menu-accordion 
+                                        ${toggle === 2 ||
+                                                pathname === "/settings/plugins/plugins.imsakiye"
+                                                ? "show" : ""
+                                            }`}>
+                                            <span className="menu-link" onClick={() => { settoggle((old) => (old === 2 ? null : 2)); }}>
+                                                <span className="menu-icon">
+                                                    <i className="ki-duotone ki-message-text-2 fs-2">
+                                                        <span className="path1"></span>
+                                                        <span className="path2"></span>
+                                                        <span className="path3"></span>
+                                                    </i>
+                                                </span>
+                                                <span className="menu-title">Eklentiler</span>
+                                                <span className="menu-arrow"></span>
+                                            </span>
+
+                                            <div className={`menu-sub menu-sub-accordion 
+                                        ${toggle === 2 ||
+                                                    pathname === "/settings/plugins/plugins.imsakiye"
+                                                    ? "show" : ""
+                                                }`}>
+                                                <div className="menu-item">
+                                                    <Link className={`menu-link ${pathname === "/settings/plugins/plugins.imsakiye" ? "active" : ""}`} href="/ayarlar/eklentiler/imsakiye">
+                                                        <span className="menu-bullet">
+                                                            <span className="bullet bullet-dot"></span>
+                                                        </span>
+                                                        <span className="menu-title">İmsakiye V1.2.0</span>
+                                                    </Link>
+                                                </div>
+                                            </div>
+                                        </div>
+
                                         <div className="menu-item">
                                             <Link className={`menu-link ${pathname === "/settings/sett.member" ? "active" : ""}`} href="/ayarlar/aboneler">
                                                 <span className="menu-icon">
@@ -525,12 +558,12 @@ function MyApp({ Component, pageProps }) {
                                         </div>
 
                                         <div className={`menu-item menu-accordion 
-                                ${toggle === 2 ||
+                                ${toggle === 3 ||
                                                 pathname === "/settings/sett.users" ||
                                                 pathname === "/settings/sett.settings"
                                                 ? "show" : ""
                                             }`}>
-                                            <span className="menu-link" onClick={() => { settoggle((old) => (old === 2 ? null : 2)); }}>
+                                            <span className="menu-link" onClick={() => { settoggle((old) => (old === 3 ? null : 3)); }}>
                                                 <span className="menu-icon">
                                                     <i className="ki-duotone ki-message-text-2 fs-2">
                                                         <span className="path1"></span>
@@ -542,7 +575,7 @@ function MyApp({ Component, pageProps }) {
                                                 <span className="menu-arrow"></span>
                                             </span>
                                             <div className={`menu-sub menu-sub-accordion 
-                                        ${toggle === 2 ||
+                                        ${toggle === 3 ||
                                                     pathname === "/settings/sett.users" ||
                                                     pathname === "/settings/sett.management"
                                                     ? "show" : ""
@@ -597,7 +630,7 @@ function MyApp({ Component, pageProps }) {
                             <div className="app-content flex-column-fluid">
                                 <div className="app-container container">
                                     <Component {...pageProps} />
-                                    <div className="h-100px"></div>
+                                    <div className="h-400px"></div>
                                 </div>
                             </div>
                         </div>

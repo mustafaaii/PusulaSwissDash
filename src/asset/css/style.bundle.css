@@ -1,10 +1,6 @@
 @charset "UTF-8";
 
-/*!
- * Bootstrap  v5.3.3 (https://getbootstrap.com/)
- * Copyright 2011-2024 The Bootstrap Authors
- * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
- */
+
 :root,
 [data-bs-theme=light] {
     --bs-blue: #0d6efd;
@@ -63548,4 +63544,110 @@ input[type="number"] {
 .next-month {
     color: #aaa;
     background-color: #f5f5f5;
+}
+
+
+.popover-container {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    color: white;
+}
+
+.popover {
+    position: absolute;
+    bottom: 120%;
+    left: 50%;
+    transform: translateX(-50%);
+    word-wrap: break-word;
+    background: #333;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    white-space: wrap;
+    opacity: 0;
+    visibility: hidden;
+    width: 250px;
+    line-height: 16px;
+    max-width: 400px;
+    text-align: center;
+    transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+}
+
+.popover-container:hover .popover {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Popover için ok işareti */
+.popover::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 8px;
+    border-style: solid;
+    border-color: #333 transparent transparent transparent;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.main-container {
+    position: absolute;
+    width: 100%;
+    left: 0;
+    visibility: visible;
+    opacity: 1;
+    transition: all 0.5s ease-in-out;
+}
+
+.main-container.active {
+    position: absolute;
+    left: -100%;
+    width: 0%;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.5s ease-in-out;
+}
+
+
+.subs-container {
+    position: absolute;
+    width: 100%;
+    left: 0;
+    visibility: visible;
+    opacity: 1;
+    transition: all 0.5s ease-in-out;
+}
+
+.subs-container.active {
+    position: absolute;
+    width: 0%;
+    left: 100%;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.5s ease-in-out;
 }

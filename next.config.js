@@ -24,7 +24,7 @@ module.exports = {
             },
             {
                 source: '/haberler/kategori',
-                destination: '/news/news.category',
+                destination: '/news/news.category.list',
             },
             {
                 source: '/haberler/analizler',
@@ -53,6 +53,10 @@ module.exports = {
             {
                 source: '/ayarlar/aboneler',
                 destination: '/settings/sett.member',
+            },
+            {
+                source: '/ayarlar/eklentiler/imsakiye',
+                destination: '/settings/plugins/plugins.imsakiye',
             },
             {
                 source: '/ayarlar/e-postalar',
